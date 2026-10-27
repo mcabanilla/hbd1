@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Surprise awaits...</title>
+  <!-- Loads confetti library for the big reveal -->
+  <script src="https://jsdelivr.net"></script>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      color: #333;
+      padding: 50px 20px;
+      transition: background-color 0.8s ease;
+    }
+    .card {
+      background: white;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    h1 { color: #ff6b6b; }
+    .countdown { font-size: 2rem; font-weight: bold; color: #4ecdc4; margin: 20px 0; }
+    button {
+      background-color: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.2rem;
+      border-radius: 25px;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.2s;
+    }
+    button:hover { transform: scale(1.1); }
+    /* Blue variant styling for the Next buttons */
+    .btn-next {
+      background-color: #4ecdc4;
+      margin-top: 20px;
+    }
+    .btn-next:hover {
+      background-color: #3dbbb2;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- PHASE 1: THE LOCK SCREEN (COUNTDOWN) -->
+  <div id="mingming" class="card">
+    <h1>🚨 ACCESS DENIED! 🚨</h1>
+    <p>You are trying to open your birthday surprise early. Nice try! 😉</p>
+    <p>This page will automatically self-destruct and unlock in:</p>
+    <div id="timer" class="countdown">Calculating...</div>
+  </div>
+
+  <!-- PHASE 2: THE INTERACTIVE GAME -->
+  <div id="riamarie" class="card hidden">
+    <h1>🎈 Answer this to unlock your greeting: 🎈</h1>
+    <p style="font-size: 1.3rem;">Sino mahal ko?</p>
+    <input type="text" id="nameInput" placeholder="Type your name here..." style="padding: 10px; font-size: 1.1rem; border-radius: 10px; border: 2px solid #4ecdc4; text-align: center;"><br><br>
+    <button onclick="checkName()">Check Answer! ✨</button>
+    <p id="errorMsg" style="color: red; font-weight: bold;"></p>
+    
+    <!-- PHASE 2 NEXT BUTTON: Hidden until she types her name and clicks Check Answer -->
+    <button id="nextBtn2" class="btn-next hidden" onclick="goToPhase3()">Next Phase ➡️</button>
+  </div>
+
+  <!-- PHASE 3: THE CELEBRATION -->
+  <div id="celebrationScreen" class="card hidden">
+    <h1 style="font-size: 3rem; animation: bounce 1s infinite;">🎂 HAPPY BIRTHDAY MINGMING Ko! 🎉</h1>
+    <p style="font-size: 1.5rem; color: #ff6b6b;">May your day be filled with endless laughter, infinite cake, and zero stress! I wish you all the best in life  with peace of mind.💖</p>
+    <div style="font-size: 5rem; margin: 20px 0;">🎁🍰🎈🥳</div>
+    
+    <!-- PHASE 3 NEXT BUTTON: Triggers the final surprise url redirection -->
+    <button class="btn-next" onclick="openFinalLink()">Final Surprise! ✨</button>
+  </div>
+
+  <script>
+    // (Format: "Month DD, YYYY HH:MM:SS")
+    const birthdayDate = new Date("October 27, 2026 8:50:00").getTime();
+
+    const finalGreetingUrl = "https://mcabanilla.github.io/bdaywish/";
+
+    // Update countdown timer every single second
+    const countdownInterval = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = birthdayDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      if (distance < 0) {
+        clearInterval(countdownInterval);
+        document.getElementById("mingming").classList.add("hidden");
+        document.getElementById("riamarie").classList.remove("hidden");
+      }
+    }, 1000);
+
+    // Step 1: Validates name and shows Phase 2's Next Button
+    function checkName() {
+      const input = document.getElementById("nameInput").value.trim();
+      if (input.length > 1) {
+        document.getElementById("errorMsg").innerText = "Alam na alam nya ihhh. 😉";
+        document.getElementById("errorMsg").style.color = "green";
+        document.getElementById("nextBtn2").classList.remove("hidden");
+      } else {
+        document.getElementById("errorMsg").innerText = "hala sya. baka small letter lahat! 🤔";
+        document.getElementById("errorMsg").style.color = "red";
+      }
+    }
+
+    // Step 2: Manually transitions from Phase 2 to Phase 3 when Next is clicked
+    function goToPhase3() {
+      document.getElementById("riamarie").classList.add("hidden");
+      document.getElementById("celebrationScreen").classList.remove("hidden");
+      document.body.style.backgroundColor = "#ffe6e6"; // Warm festive background swap
+      triggerConfettiShower();
+    }
+
+    // Step 3: Redirects her out to your final custom external link
+    function openFinalLink() {
+      window.location.href = finalGreetingUrl;
+    }
+
+    // Confetti Engine
+    function triggerConfettiShower() {
+      var duration = 5 * 1000;
+      var end = Date.now() + duration;
+      (function frame() {
+        confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0, y: 0.8 } });
+        confetti({ particleCount: 4, angle: 120, spread: 55, origin: { x: 1, y: 0.8 } });
+        if (Date.now() < end) { requestAnimationFrame(frame); }
+      }());
+    }
+  </script>
+
+</body>
+</html>
